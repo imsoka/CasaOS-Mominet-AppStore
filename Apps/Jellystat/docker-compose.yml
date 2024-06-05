@@ -1,0 +1,55 @@
+name: jellystat
+services:
+  jellystat:
+    image: cyfershepard/jellystat:1.0.9
+    environment:
+      POSTGRES_USER: casaos
+      POSTGRES_PASSWORD: casaos
+      POSTGRES_IP: 192.168.1.2
+      POSTGRES_PORT: 5432
+      PGID: $PGID
+      PUID: $PUID
+      TZ: $TZ
+    ports: 
+      - target: 3000
+        published: "3000"
+        protocol: tcp
+    volumes:
+      - type: bind
+        source: /DATA/AppData/$AppID/backup-data
+        target: /app/backend/backup-data
+    x-casaos:
+      envs:
+        - container: TZ
+          description:
+            en_us: TimeZone
+        - container: PUID
+          description:
+            en_us: Run Jellystat as specified uid.
+        - container: PGID
+          description:
+            en_us: Run Jellystat as specified gid.
+      ports:
+        - container: "3000"
+          description:
+            en_us: WebUI HTTP Port
+      volumes:
+        - container: /app/backend/backup-data
+          description:
+            en_us: The backup data
+    container_name: jellystat
+    restart: unless-stopped
+  x-casaos:
+    main: jellystat
+    author: Mominet
+    category: Statistics
+    description:
+      en_us: Jellystats
+    developer: CyferShepard
+    icon: https://raw.githubusercontent.com/imsoka/CasaOS-Mominet-AppStore/main/Apps/Jellystat/icon.png 
+    tagline:
+      en_us: Jellystat
+    title: 
+      en_us: Jellystat
+    index: /
+    port_map: "3000"
